@@ -1,0 +1,75 @@
+﻿
+@inject ICustomerRepository CustomerRepository
+
+@if(Customer is not null)
+{
+    <EditForm Enhance="true" FormName="AddOrEditCustomerForm" OnValidSubmit="AddOrEditCustomer" Model="Customer">
+        <h3>
+            @Title
+        </h3>
+        @if (IsEditMode)
+        {
+            <input type="hidden" name="Customer.Id" value="@Customer.Id" />
+        }
+        <div class="mb-3">
+            <label for="name" class="form-label">
+                Customer Name
+            </label>
+            <InputText id="name" @bind-Value="Customer.Name" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">
+                Customer Email
+            </label>
+            <InputText id="email" @bind-Value="Customer.EmailAddress" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">
+                Customer Phone
+            </label>
+            <InputText id="phone" @bind-Value="Customer.PhoneNumber" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary shadow-none">
+                Save
+            </button>
+            <a href="/" class="btn btn-primary shadow-none ms-3">
+                Back to Customers
+            </a>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public bool IsEditMode { get; set; } = false;
+
+    [Parameter]
+    public int CustomerId { get; set; }
+
+    [Parameter]
+    public EventCallback<Customer> OnValidCustomerSubmit{ get; set; }
+
+    [SupplyParameterFromForm]
+    public Customer? Customer { get; set; }
+
+    private string Title => IsEditMode ? "Edit Customer" : "Add New Customer";
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditMode)
+        {
+            Customer ??= await CustomerRepository.GetByIdAsync(CustomerId);
+        }
+        else
+        {
+            Customer ??= new();
+        }
+    }
+
+    private async Task AddOrEditCustomer()
+    {
+        await OnValidCustomerSubmit.InvokeAsync(Customer);
+    }
+}

@@ -1,0 +1,55 @@
+﻿@inject ICustomerRepository CustomerRepository
+@inject NavigationManager NavigationManager
+
+
+<div class="customer-card">
+    <div class="customer-card-body">
+        <h5>@Customer.Name</h5>
+        @Customer.EmailAddress | @Customer.PhoneNumber
+    </div>
+    <div class ="options">
+        <a href="@($"/edit/{Customer.Id}")" class="btn btn-warning shadow-none">
+            Edit
+        </a>
+        <button @onclick="DeleteDialog" class="btn btn-danger" ms-3>
+            Delete
+        </button>
+    </div>
+</div>
+
+<DeleteConfirmDialog Show="ShowDialog" OnCancel="CancelDelete" OnDelete="DeleteCustomer" />
+
+<style>
+    .customer-card{
+        display : flex;
+        flex-direction : row;
+        justify-content : space-between;
+    }
+</style>
+
+@code {
+
+    [Parameter]
+    public required Customer Customer { get; set; }
+
+    [Parameter]
+    public bool ShowDialog { get; set; }
+
+   
+    public void DeleteDialog()
+    {
+        ShowDialog = true;
+    }
+
+    public void CancelDelete()
+    {
+        ShowDialog = false;
+    }
+
+    public async Task DeleteCustomer()
+    {
+        await CustomerRepository.DeleteByIdAsync(Customer.Id);
+        ShowDialog = false;
+        NavigationManager.NavigateTo("/");
+    }
+}

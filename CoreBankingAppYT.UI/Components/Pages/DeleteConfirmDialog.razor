@@ -1,0 +1,60 @@
+﻿@if (Show)
+{
+    <div class="confirm-dialog-container">
+        <div class="confirm-dialog">
+            <h3>
+                Are you sure
+            </h3>
+            <div class="d-flex flex-row justify-content-end mt-3">
+                <button @onclick="OnCancel" class="btn btn-secondary shadow-none">
+                    Cancel
+                </button>
+                <button @onclick="OnDelete" class="btn btn-warning shadow-none ms-3">
+                    Delete
+                </button>
+            </div>
+        </div>
+
+    </div>
+}
+
+<style>
+    .confirm-dialog-container{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right:0;
+        bottom:0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items:center;
+        background-color: rgba(0,0,0,0.5);
+        z-index:2000;
+    }
+
+    .confirm-dialog{
+        display:flex;
+        flex-direction: column;
+        background-color: white;
+        justify-content: space-between;
+        min-width: 20rem;
+        padding: 2rem;
+        border-radius: 1rem;
+        margin-top:1rem;
+        position:fixed;
+    }
+</style>
+
+
+@code {
+
+    [Parameter]
+    public bool Show { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
+}

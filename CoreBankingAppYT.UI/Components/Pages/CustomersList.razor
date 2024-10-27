@@ -1,0 +1,62 @@
+﻿@page "/"
+
+@inject ICustomerRepository CustomerRepository
+@rendermode InteractiveServer
+
+
+<PageTitle>
+    Customer List
+</PageTitle>
+
+
+<div class="row justify-content-center">
+    <div class="col-6">
+        <a href="add-new-customer" class="btn btn-primary shadow-none mb-3">
+            Add Customer
+        </a>
+        @if(Customers is null)
+        {
+            <div class="customer-item">
+                Loading Customers, Please wait .....
+            </div>
+        }
+        else if (Customers.Any())
+        {
+            @foreach (var customer in Customers)
+            {
+                <div class="customer-item">
+                   <CustomersCard Customer="customer"/>
+                </div>        
+            }
+        }
+        else
+        {
+            <div class="customer-item">
+                No Customers Found
+            </div>
+        
+        }
+    </div>
+</div>
+
+<style>
+    .customer-item{
+        padding : 1.5rem;
+        margin-bottom : 1rem;
+        box-shadow : 0 0 0.5rem rgba(0,0,0,0.3);
+        border-radius : 0.5rem;
+    }
+</style>
+
+
+@code {
+
+    public List<Customer> Customers { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Customers = await CustomerRepository.GetAllAsync();
+       
+    }
+}

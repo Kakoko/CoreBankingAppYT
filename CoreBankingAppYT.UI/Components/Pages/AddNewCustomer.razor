@@ -1,0 +1,26 @@
+﻿@page "/add-new-customer"
+
+@inject ICustomerRepository CustomerRepository
+@inject NavigationManager NavigationManager
+
+
+<PageTitle> 
+    Add New Customer 
+</PageTitle>
+
+<div class="row justify-content-center">
+    <div class="col-6">
+        <CustomerForm IsEditMode="false" OnValidCustomerSubmit="AddCustomer" />
+    </div>
+</div>
+@code {
+
+  
+
+    private async Task AddCustomer( Customer customer)
+    {
+
+        await CustomerRepository.AddAsync(customer);
+        NavigationManager.NavigateTo("/");
+    }
+}
